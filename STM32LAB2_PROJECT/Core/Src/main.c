@@ -96,6 +96,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  HAL_TIM_Base_Start_IT (& htim2 ) ;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -213,7 +214,14 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+int counter = 1000;
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+	counter--;
+	if(counter <= 0){
+		counter = 1000;
+		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+	}
+}
 /* USER CODE END 4 */
 
 /**
