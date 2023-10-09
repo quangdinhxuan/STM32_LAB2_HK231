@@ -231,25 +231,47 @@ int main(void)
   HAL_TIM_Base_Start_IT (& htim2 ) ;
   /* USER CODE END 2 */
   int hour = 15, minute = 8, second = 50;
-
+  updateClockBuffer(hour,minute);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  setTimer0(100);
+  setTimer1(100);
+  setTimer2(100);
+  setTimer3(25);
   while (1)
   {
-	  second++;
-	     if (second >= 60){
+	  if(timer0_flag==1){
+	      second++;
+
+	      if (second >= 60){
 	         second = 0;
 	         minute++;
-	     }
-	     if(minute >= 60){
+	      }
+	      if(minute >= 60){
 	         minute = 0;
 	         hour++;
-	     }
-	     if(hour >=24){
+	      }
+	      if(hour >=24){
 	         hour = 0;
-	     }
-	     updateClockBuffer(hour,minute);
-	     HAL_Delay(1000);
+	      }
+	      updateClockBuffer(hour,minute);
+	      setTimer0(100);
+	  }
+	  if(timer1_flag==1){
+		  HAL_GPIO_TogglePin(GPIOA,LED1_Pin);
+		  setTimer1(100);
+	  }
+	  if(timer2_flag==1){
+		  HAL_GPIO_TogglePin(GPIOA,DOT_Pin);
+		  setTimer2(100);
+	  }
+	  if(timer3_flag==1){
+		  update7SEG(index_led);
+		  display7SEG(led_buffer[index_led]);
+		  index_led = (index_led + 1)% MAX_LED;
+		  setTimer3(25);
+
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -385,22 +407,14 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-int count = 100;
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-	if(count > 0){
-		count--;
-		if(count==75||count==50||count==25||count==0){
-			update7SEG(index_led);
-			display7SEG(led_buffer[index_led]);
-			index_led = (index_led + 1)% MAX_LED;
-		}
-		if(count <= 0){
-			updateClockBuffer(led_buffer[0],led_buffer[2]);
-			count = 100;
-			HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
 
-		}
-	}
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+timerRun0();
+timerRun1();
+timerRun2();
+timerRun3();
+
+
 }
 /* USER CODE END 4 */
 
