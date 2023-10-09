@@ -365,15 +365,18 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 int count = 100;
-
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	if(count > 0){
 		count--;
-		if(count <= 0){
-			count = 100;
+		if(count==75||count==50||count==25||count==0){
 			update7SEG(index_led);
 			display7SEG(led_buffer[index_led]);
 			index_led = (index_led + 1)% MAX_LED;
+		}
+		if(count <= 0){
+			count = 100;
+			HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+
 		}
 	}
 }
