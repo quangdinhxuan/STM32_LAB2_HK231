@@ -230,10 +230,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT (& htim2 ) ;
   /* USER CODE END 2 */
-  int hour = 15, minute = 8, second = 50;
-  updateClockBuffer(hour,minute);
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  int hour = 15, minute = 8, second = 50;
+  updateClockBuffer(hour,minute);
   setTimer0(100);
   setTimer1(100);
   setTimer2(100);
